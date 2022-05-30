@@ -1,4 +1,4 @@
-package com.rezanandika.clone_instagram;
+package com.rezanandika.task_rahmanda_one;
 
 import io.flutter.embedding.android.FlutterActivity;
 

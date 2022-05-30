@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.rezanandika.clone_instagram">
+    package="com.rezanandika.task_rahmanda_one">
    <application
-        android:label="clone_instagram"
+        android:label="task_rahmanda_one"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
