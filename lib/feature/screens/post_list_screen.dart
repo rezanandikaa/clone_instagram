@@ -2,12 +2,14 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ds_bfi/flutter_ds_bfi.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:indonesia/indonesia.dart';
 import 'package:intl/intl.dart';
 import 'package:task_rahmanda_one/bloc/post_list_bloc/bloc.dart';
 import 'package:task_rahmanda_one/model/post_model.dart';
 import 'package:task_rahmanda_one/repositories/post_list_repo.dart';
 import 'package:task_rahmanda_one/widget/no_connection.dart';
+import 'package:shimmer/shimmer.dart';
 
 class PostListScreen extends StatefulWidget {
   @override
@@ -99,14 +101,10 @@ class _PostListScreenState extends State<PostListScreen> {
                   cubit: postListBloc,
                   builder: (_, PostListState state) {
                     if (state is PostListEmpty) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return _loadingSkeleton();
                     }
                     if (state is PostListLoading) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return _loadingSkeleton();
                     }
                     if (state is PostListLoaded) {
                       final List<Data> dataList = state.dataPostList;
@@ -238,20 +236,21 @@ class _PostListScreenState extends State<PostListScreen> {
     return Container(
       height: MediaQuery.of(context).size.height * 0.75,
       width: double.infinity,
-      padding: const EdgeInsets.only(right: 16, left: 16),
+      padding: const EdgeInsets.only(right: 12, left: 12),
       decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 5,
-              blurRadius: 7,
-              offset: Offset(0, 3),
+              spreadRadius: 2,
+              blurRadius: 2,
+              offset: Offset(0, 1),
             ),
           ],
           borderRadius: BorderRadius.circular(8)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 12),
@@ -265,6 +264,7 @@ class _PostListScreenState extends State<PostListScreen> {
                 children: [
                   CircleAvatar(
                     radius: 20,
+                    backgroundColor: Colors.white,
                     backgroundImage:
                         NetworkImage(listData[index].owner.picture),
                   ),
@@ -274,17 +274,18 @@ class _PostListScreenState extends State<PostListScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      DSText(
-                        data:
-                            '${listData[index].owner.firstName} ${listData[index].owner.lastName}',
-                        textStyle: TextStyle(color: Colors.black, fontSize: 14),
+                      Text(
+                        '${listData[index].owner.firstName} ${listData[index].owner.lastName}',
+                        style: GoogleFonts.poppins(
+                            color: Colors.black, fontSize: 14),
                       ),
                       SizedBox(
-                        height: 8,
+                        height: 4,
                       ),
-                      DSText(
-                        data: tgl,
-                        textStyle: TextStyle(fontSize: 11, color: Colors.grey),
+                      Text(
+                        tgl,
+                        style: GoogleFonts.poppins(
+                            fontSize: 11, color: Colors.grey),
                       )
                     ],
                   )
@@ -312,23 +313,22 @@ class _PostListScreenState extends State<PostListScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                child: DSText(
-                  data:
-                      '${listData[index].owner.firstName} ${listData[index].owner.lastName}',
-                  textStyle: TextStyle(
+                child: Text(
+                  '${listData[index].owner.firstName} ${listData[index].owner.lastName}',
+                  style: GoogleFonts.poppins(
                       color: Colors.black,
                       fontSize: 12,
                       fontWeight: FontWeight.bold),
                 ),
               ),
-              SizedBox(width: 4),
+              SizedBox(width: 8),
               Container(
-                width: MediaQuery.of(context).size.width * 0.6,
-                child: DSText(
-                  textOverflow: TextOverflow.ellipsis,
-                  maxLines: 4,
-                  data: listData[index].text,
-                  textStyle: TextStyle(
+                width: MediaQuery.of(context).size.width * 0.579,
+                child: Text(
+                  listData[index].text,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.poppins(
                     color: Colors.black,
                     fontSize: 12,
                   ),
@@ -345,9 +345,9 @@ class _PostListScreenState extends State<PostListScreen> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                DSText(
-                  data: 'Tags: ',
-                  textStyle: TextStyle(color: Colors.grey, fontSize: 14),
+                Text(
+                  'Tags: ',
+                  style: GoogleFonts.poppins(color: Colors.grey, fontSize: 14),
                 ),
                 SizedBox(
                   width: 8,
@@ -367,15 +367,15 @@ class _PostListScreenState extends State<PostListScreen> {
                       return Container(
                         padding: EdgeInsets.all(8),
                         constraints:
-                            BoxConstraints(maxWidth: 100, maxHeight: 40),
+                            BoxConstraints(maxWidth: 150, maxHeight: 40),
                         decoration: BoxDecoration(
                           color: Colors.red,
                           borderRadius: BorderRadius.circular(4),
                         ),
-                        child: DSText(
-                          data: listData[index].tags[idx],
-                          textStyle:
-                              TextStyle(fontSize: 11, color: Colors.white),
+                        child: Text(
+                          listData[index].tags[idx],
+                          style: GoogleFonts.poppins(
+                              fontSize: 11, color: Colors.white),
                         ),
                       );
                     },
@@ -399,8 +399,9 @@ class _PostListScreenState extends State<PostListScreen> {
               SizedBox(
                 width: 8,
               ),
-              DSText(
-                data: '${listData[index].likes.toString()} People',
+              Text(
+                '${listData[index].likes.toString()} People',
+                style: GoogleFonts.poppins(color: Colors.grey),
               ),
             ],
           ),
@@ -427,9 +428,10 @@ class _PostListScreenState extends State<PostListScreen> {
                     SizedBox(
                       width: 8,
                     ),
-                    DSText(
-                      data: 'Like',
-                      textStyle: TextStyle(color: Colors.grey, fontSize: 15),
+                    Text(
+                      'Like',
+                      style:
+                          GoogleFonts.poppins(color: Colors.grey, fontSize: 15),
                     ),
                   ],
                 ),
@@ -447,9 +449,10 @@ class _PostListScreenState extends State<PostListScreen> {
                     SizedBox(
                       width: 8,
                     ),
-                    DSText(
-                      data: 'Comment',
-                      textStyle: TextStyle(color: Colors.grey, fontSize: 15),
+                    Text(
+                      'Comment',
+                      style:
+                          GoogleFonts.poppins(color: Colors.grey, fontSize: 15),
                     ),
                   ],
                 ),
@@ -467,9 +470,10 @@ class _PostListScreenState extends State<PostListScreen> {
                     SizedBox(
                       width: 8,
                     ),
-                    DSText(
-                      data: 'Share',
-                      textStyle: TextStyle(color: Colors.grey, fontSize: 15),
+                    Text(
+                      'Share',
+                      style:
+                          GoogleFonts.poppins(color: Colors.grey, fontSize: 15),
                     ),
                   ],
                 ),
@@ -478,6 +482,319 @@ class _PostListScreenState extends State<PostListScreen> {
           )
         ],
       ),
+    );
+  }
+
+  Widget _loadingSkeleton() {
+    return Column(
+      children: [
+        Expanded(
+          child: ListView(children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 16),
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.75,
+                width: double.infinity,
+                padding: const EdgeInsets.only(right: 12, left: 12),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 2,
+                        offset: Offset(0, 1),
+                      ),
+                    ],
+                    borderRadius: BorderRadius.circular(8)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey[300],
+                          highlightColor: Colors.grey[100],
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.11,
+                            height: MediaQuery.of(context).size.height * 0.11,
+                            decoration: BoxDecoration(
+                                color: Colors.white, shape: BoxShape.circle),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 16.0,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Shimmer.fromColors(
+                              baseColor: Colors.grey[300],
+                              highlightColor: Colors.grey[100],
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.4,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.025,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Shimmer.fromColors(
+                              baseColor: Colors.grey[300],
+                              highlightColor: Colors.grey[100],
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.4,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.025,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 4.0,
+                    ),
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey[300],
+                      highlightColor: Colors.grey[100],
+                      child: Container(
+                        padding: EdgeInsets.only(top: 8.0),
+                        width: double.infinity,
+                        height: MediaQuery.of(context).size.height * 0.36,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 16.0,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey[300],
+                          highlightColor: Colors.grey[100],
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            height: MediaQuery.of(context).size.height * 0.025,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey[300],
+                          highlightColor: Colors.grey[100],
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            height: MediaQuery.of(context).size.height * 0.025,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 16.0,
+                    ),
+                    Container(
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height * 0.04,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Tags: ',
+                            style: GoogleFonts.poppins(
+                                color: Colors.grey, fontSize: 14),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Expanded(
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              children: [
+                                Shimmer.fromColors(
+                                    baseColor: Colors.grey[300],
+                                    highlightColor: Colors.grey[100],
+                                    child: Container(
+                                      padding: EdgeInsets.all(8),
+                                      constraints: BoxConstraints(
+                                          maxWidth: 40, maxHeight: 40),
+                                      decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                    )),
+                                SizedBox(width: 8.0),
+                                Shimmer.fromColors(
+                                    baseColor: Colors.grey[300],
+                                    highlightColor: Colors.grey[100],
+                                    child: Container(
+                                      padding: EdgeInsets.all(8),
+                                      constraints: BoxConstraints(
+                                          maxWidth: 40, maxHeight: 40),
+                                      decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                    )),
+                                SizedBox(width: 8.0),
+                                Shimmer.fromColors(
+                                    baseColor: Colors.grey[300],
+                                    highlightColor: Colors.grey[100],
+                                    child: Container(
+                                      padding: EdgeInsets.all(8),
+                                      constraints: BoxConstraints(
+                                          maxWidth: 150, maxHeight: 40),
+                                      decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                    )),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.thumb_up_alt,
+                          color: Colors.blue,
+                          size: 20,
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey[300],
+                          highlightColor: Colors.grey[100],
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.3,
+                            height: MediaQuery.of(context).size.height * 0.021,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 16.0,
+                    ),
+                    Container(
+                        width: double.infinity, height: 1, color: Colors.grey),
+                    SizedBox(
+                      height: 16.0,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(
+                                Icons.thumb_up_alt_outlined,
+                                color: Colors.grey,
+                                size: 25,
+                              ),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                'Like',
+                                style: GoogleFonts.poppins(
+                                    color: Colors.grey, fontSize: 15),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(
+                                Icons.mode_comment_outlined,
+                                color: Colors.grey,
+                                size: 25,
+                              ),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                'Comment',
+                                style: GoogleFonts.poppins(
+                                    color: Colors.grey, fontSize: 15),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(
+                                Icons.share,
+                                color: Colors.grey,
+                                size: 25,
+                              ),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                'Share',
+                                style: GoogleFonts.poppins(
+                                    color: Colors.grey, fontSize: 15),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ]),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: DSNudedButton(
+              buttonState: DSButtonState.Active,
+              text: 'Muat lebih banyak',
+              fontSize: 14.0,
+              color: DSColor.secondaryOrange,
+              onTap: () {}),
+        ),
+      ],
     );
   }
 }

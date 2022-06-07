@@ -1,7 +1,7 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_ds_bfi/flutter_ds_bfi.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:indonesia/indonesia.dart';
 import 'package:intl/intl.dart';
 import 'package:task_rahmanda_one/arguments/arguments_user_post.dart';
@@ -54,6 +54,96 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
     super.dispose();
   }
 
+  void _showButtomComment() {
+    showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.white,
+        isScrollControlled: true,
+        builder: (context) {
+          return Padding(
+            padding: const EdgeInsets.all(8),
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.5,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 4.0, bottom: 16.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Icon(
+                            Icons.close,
+                            color: Colors.black,
+                            size: 24,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Comment',
+                          style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16.0,
+                              color: Colors.black),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.separated(
+                      separatorBuilder: (BuildContext context, int index) {
+                        return SizedBox(height: 16.0);
+                      },
+                      itemCount: dataCommentList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Container(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.pushReplacementNamed(
+                                            context, '/profile-screen',
+                                            arguments: dataCommentList[index]
+                                                .owner
+                                                .id);
+                                      },
+                                      child: Text(
+                                        '${dataCommentList[index].owner.firstName} ${dataCommentList[index].owner.lastName}',
+                                        style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      dataCommentList[index].message,
+                                      style: GoogleFonts.poppins(fontSize: 12),
+                                    )
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,9 +166,9 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
                     size: 18,
                   ),
                   SizedBox(width: 4),
-                  DSText(
-                    data: 'Back',
-                    textStyle: TextStyle(
+                  Text(
+                    'Back',
+                    style: GoogleFonts.poppins(
                       color: Colors.black,
                       fontSize: 14,
                     ),
@@ -148,54 +238,6 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
     );
   }
 
-  // _commentPopUp() {
-  //   return InkWell(
-  //     onTap: () {
-  //       showModalBottomSheet(
-  //           context: context,
-  //           backgroundColor: Colors.white,
-  //           isScrollControlled: true,
-  //           builder: (context) {
-  //             return Padding(
-  //               padding: const EdgeInsets.all(8),
-  //               child: ListView.separated(
-  //                 separatorBuilder: (BuildContext context, int index) {
-  //                   return SizedBox(height: 16.0);
-  //                 },
-  //                 itemCount: dataCommentList.length,
-  //                 itemBuilder: (BuildContext context, int index) {
-  //                   return Container(
-  //                     child: Column(
-  //                       mainAxisAlignment: MainAxisAlignment.start,
-  //                       children: [
-  //                         Container(
-  //                           child: Row(
-  //                             crossAxisAlignment: CrossAxisAlignment.start,
-  //                             children: [
-  //                               DSText(
-  //                                 data:
-  //                                     '${dataCommentList[index].owner.firstName} ${dataCommentList[index].owner.lastName}',
-  //                                 textStyle: TextStyle(
-  //                                     fontSize: 12, color: Colors.black),
-  //                               ),
-  //                               SizedBox(width: 8),
-  //                               DSText(
-  //                                 data: dataCommentList[index].message,
-  //                               )
-  //                             ],
-  //                           ),
-  //                         )
-  //                       ],
-  //                     ),
-  //                   );
-  //                 },
-  //               ),
-  //             );
-  //           });
-  //     },
-  //   );
-  // }
-
   Widget _mainDetailPost(BuildContext context) {
     return Container(
       width: double.infinity,
@@ -221,17 +263,18 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      DSText(
-                        data:
-                            '${widget.argumentsUserPost.firstName} ${widget.argumentsUserPost.lastName}',
-                        textStyle: TextStyle(color: Colors.black, fontSize: 14),
+                      Text(
+                        '${widget.argumentsUserPost.firstName} ${widget.argumentsUserPost.lastName}',
+                        style: GoogleFonts.poppins(
+                            color: Colors.black, fontSize: 14),
                       ),
                       SizedBox(
                         height: 6,
                       ),
-                      DSText(
-                        data: tgl,
-                        textStyle: TextStyle(fontSize: 11, color: Colors.grey),
+                      Text(
+                        tgl,
+                        style: GoogleFonts.poppins(
+                            fontSize: 11, color: Colors.grey),
                       )
                     ],
                   )
@@ -242,11 +285,11 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
             Container(
               width: double.infinity,
               height: MediaQuery.of(context).size.height * 0.05,
-              child: DSText(
+              child: Text(
+                widget.argumentsUserPost.text,
                 maxLines: 3,
-                textOverflow: TextOverflow.ellipsis,
-                data: widget.argumentsUserPost.text,
-                textStyle: TextStyle(color: Colors.black, fontSize: 12),
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.poppins(color: Colors.black, fontSize: 12),
               ),
             ),
             SizedBox(height: 16.0),
@@ -275,9 +318,9 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
                       SizedBox(
                         width: 8,
                       ),
-                      DSText(
-                        data:
-                            '${widget.argumentsUserPost.likes.toString()} People',
+                      Text(
+                        '${widget.argumentsUserPost.likes.toString()} People',
+                        style: GoogleFonts.poppins(color: Colors.grey),
                       ),
                     ],
                   ),
@@ -295,125 +338,16 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
                           SizedBox(
                             width: 8,
                           ),
-                          DSText(
-                            data: '0 People',
+                          Text(
+                            '0 People',
+                            style: GoogleFonts.poppins(color: Colors.grey),
                           ),
                         ],
                       )
                     : Container(
                         child: InkWell(
                           onTap: () {
-                            showModalBottomSheet(
-                                context: context,
-                                backgroundColor: Colors.white,
-                                isScrollControlled: true,
-                                builder: (context) {
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8),
-                                    child: Container(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.5,
-                                      child: Column(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 4.0, bottom: 16.0),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                InkWell(
-                                                  onTap: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: const Icon(
-                                                    Icons.close,
-                                                    color: Colors.black,
-                                                    size: 24,
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 8),
-                                                DSText(
-                                                  data: 'Comment',
-                                                  textStyle: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 16.0,
-                                                      color: Colors.black),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: ListView.separated(
-                                              separatorBuilder:
-                                                  (BuildContext context,
-                                                      int index) {
-                                                return SizedBox(height: 16.0);
-                                              },
-                                              itemCount: dataCommentList.length,
-                                              itemBuilder:
-                                                  (BuildContext context,
-                                                      int index) {
-                                                return Container(
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      Container(
-                                                        child: Row(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            InkWell(
-                                                              onTap: () {
-                                                                Navigator.pushReplacementNamed(
-                                                                    context,
-                                                                    '/profile-screen',
-                                                                    arguments:
-                                                                        dataCommentList[index]
-                                                                            .owner.id);
-                                                              },
-                                                              child: DSText(
-                                                                data:
-                                                                    '${dataCommentList[index].owner.firstName} ${dataCommentList[index].owner.lastName}',
-                                                                textStyle: TextStyle(
-                                                                    fontSize:
-                                                                        12,
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold),
-                                                              ),
-                                                            ),
-                                                            SizedBox(width: 8),
-                                                            DSText(
-                                                              data:
-                                                                  dataCommentList[
-                                                                          index]
-                                                                      .message,
-                                                              textStyle:
-                                                                  TextStyle(
-                                                                      fontSize:
-                                                                          12),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                });
+                            _showButtomComment();
                           },
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -427,8 +361,9 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
                               SizedBox(
                                 width: 8,
                               ),
-                              DSText(
-                                data: '${total.toString()} People',
+                              Text(
+                                '${total.toString()} People',
+                                style: GoogleFonts.poppins(color: Colors.grey),
                               ),
                             ],
                           ),
