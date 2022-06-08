@@ -2,6 +2,8 @@
 
 - Add Skeleton Loading
 - Add Google Fonts Package
+- Add Toast Widget
+- Make Connection Gate
 - Fixing error map data from Profile Screen
 - Reduce Code Smells
 
