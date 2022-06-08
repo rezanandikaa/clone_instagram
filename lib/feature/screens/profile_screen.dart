@@ -187,6 +187,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Center(
             child: CircleAvatar(
               radius: 60,
+              backgroundColor: Colors.white,
               backgroundImage: NetworkImage(profileModel.picture),
             ),
           ),
