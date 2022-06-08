@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return OKToast(
       position: ToastPosition.top,
       child: MaterialApp(
-        title: 'Field Audit Mobile',
+        title: 'Instagram Clone',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
             primaryColor: DSColor.primaryBlue,
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
             splashColor: Colors.transparent,
             appBarTheme: const AppBarTheme(brightness: Brightness.dark)),
         onGenerateRoute: Routers.generateRoute,
-        initialRoute: '/post-list-screen',
+        initialRoute: '/splash-screen',
       ),
     );
   }

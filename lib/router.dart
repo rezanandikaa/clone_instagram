@@ -2,11 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:task_rahmanda_one/arguments/arguments_user_post.dart';
 import 'package:task_rahmanda_one/feature/screens/detail_post_screen.dart';
 import 'package:task_rahmanda_one/feature/screens/profile_screen.dart';
+import 'package:task_rahmanda_one/feature/screens/splash_screen.dart';
 import 'feature/screens/post_list_screen.dart';
 
 class Routers {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case '/splash-screen':
+        return PageRouteBuilder<dynamic>(
+            pageBuilder: (_, __, ___) => SplashScreen(),
+            settings: RouteSettings(name: settings.name),
+            transitionsBuilder: (_, Animation<double> a, __, Widget c) =>
+                FadeTransition(opacity: a, child: c));
+
       case '/post-list-screen':
         return PageRouteBuilder<dynamic>(
             pageBuilder: (_, __, ___) => PostListScreen(),

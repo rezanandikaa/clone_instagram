@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ds_bfi/flutter_ds_bfi.dart';
 import 'package:indonesia/indonesia.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:task_rahmanda_one/arguments/arguments_user_post.dart';
 import 'package:task_rahmanda_one/bloc/post_porfile_bloc/bloc.dart';
 import 'package:task_rahmanda_one/bloc/profile_bloc/bloc.dart';
@@ -159,13 +160,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   cubit: profileBloc,
                   builder: (_, ProfileState state) {
                     if (state is ProfileLoading) {
-                      return Center(child: CircularProgressIndicator());
+                      return _gridSkeletonLoading();
                     }
                     if (state is ProfileLoaded) {
                       return _mainProfile(context);
                     }
                     if (state is ProfileError) {
-                      return Center(child: CircularProgressIndicator());
+                      return _gridSkeletonLoading();
                     }
                     return Container();
                   },
@@ -220,8 +221,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ? MediaQuery.of(context).size.height * 0.5
                 : MediaQuery.of(context).size.height * 0.45,
             child: isLoading == true
-                ? Center(
-                    child: CircularProgressIndicator(),
+                ? SingleChildScrollView(
+                    child: _gridSkeletonLoading(),
                   )
                 : SingleChildScrollView(
                     child: GridView.count(
@@ -278,6 +279,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
             height: 8,
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _gridSkeletonLoading() {
+    return Container(
+      width: double.infinity,
+      height: hasReachedMax == true
+          ? MediaQuery.of(context).size.height * 0.5
+          : MediaQuery.of(context).size.height * 0.45,
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey[300],
+        highlightColor: Colors.grey[100],
+        child: GridView.count(
+            crossAxisCount: 3,
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            controller: ScrollController(keepScrollOffset: false),
+            children: dataPostProfile.map((dynamic item) {
+              return Container(
+                  width: 100,
+                  height: 100,
+                  child: Image(
+                    image: NetworkImage(item.image),
+                    color: Colors.white,
+                    fit: BoxFit.cover,
+                  ));
+            }).toList()),
       ),
     );
   }

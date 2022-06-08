@@ -5,9 +5,11 @@ import 'package:flutter_ds_bfi/flutter_ds_bfi.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:indonesia/indonesia.dart';
 import 'package:intl/intl.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:task_rahmanda_one/bloc/post_list_bloc/bloc.dart';
 import 'package:task_rahmanda_one/model/post_model.dart';
 import 'package:task_rahmanda_one/repositories/post_list_repo.dart';
+import 'package:task_rahmanda_one/widget/custom_toast_widget.dart';
 import 'package:task_rahmanda_one/widget/no_connection.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -81,6 +83,11 @@ class _PostListScreenState extends State<PostListScreen> {
             : BlocListener<PostListBloc, PostListState>(
                 cubit: postListBloc,
                 listener: (_, PostListState state) {
+                  if (state is PostListEmpty) {
+                    setState(() {
+                      isLoading = false;
+                    });
+                  }
                   if (state is PostListLoading) {
                     setState(() {
                       isLoading = true;
@@ -94,6 +101,7 @@ class _PostListScreenState extends State<PostListScreen> {
                   if (state is PostListError) {
                     setState(() {
                       isLoading = false;
+                      noConnection = true;
                     });
                   }
                 },
@@ -169,13 +177,36 @@ class _PostListScreenState extends State<PostListScreen> {
                                     text: 'Muat lebih banyak',
                                     fontSize: 14.0,
                                     color: DSColor.secondaryOrange,
-                                    onTap: () {
+                                    onTap: () async {
                                       setState(() {
                                         isLoading = true;
                                         dataList.clear();
                                         _page++;
                                       });
-                                      postListBloc.add(GetPostList(10 * _page));
+                                      final ConnectivityResult
+                                          connectivityResult =
+                                          await Connectivity()
+                                              .checkConnectivity();
+                                      if (connectivityResult !=
+                                          ConnectivityResult.none) {
+                                        postListBloc
+                                            .add(GetPostList(10 * _page));
+                                      } else {
+                                        showToastWidget(
+                                            CustomToast(
+                                              message:
+                                                  'Error Connection, Please Try Again',
+                                              backgroundColor: Colors.red,
+                                              isSuccess: false,
+                                            ),
+                                            position: ToastPosition.top,
+                                            duration:
+                                                const Duration(seconds: 4));
+                                        setState(() {
+                                          noConnection = true;
+                                        });
+                                        _getData();
+                                      }
                                     }),
                               ),
                             const SizedBox(
@@ -222,9 +253,7 @@ class _PostListScreenState extends State<PostListScreen> {
                       }
                     }
                     if (state is PostListError) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return _loadingSkeleton();
                     }
                     return Container();
                   },
@@ -312,13 +341,19 @@ class _PostListScreenState extends State<PostListScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                child: Text(
-                  '${listData[index].owner.firstName} ${listData[index].owner.lastName}',
-                  style: GoogleFonts.poppins(
-                      color: Colors.black,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold),
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, '/profile-screen',
+                      arguments: listData[index].owner.id);
+                },
+                child: Container(
+                  child: Text(
+                    '${listData[index].owner.firstName} ${listData[index].owner.lastName}',
+                    style: GoogleFonts.poppins(
+                        color: Colors.black,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
               SizedBox(width: 8),

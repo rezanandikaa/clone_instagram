@@ -59,6 +59,9 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
         context: context,
         backgroundColor: Colors.white,
         isScrollControlled: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
         builder: (context) {
           return Padding(
             padding: const EdgeInsets.all(8),
@@ -104,6 +107,8 @@ class _DetailPostScreenState extends State<DetailPostScreen> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Container(
+                                padding:
+                                    EdgeInsets.only(left: 10.0, right: 10.0),
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [

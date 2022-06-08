@@ -50,6 +50,7 @@ dependencies:
   google_fonts: ^1.1.2
   shimmer: ^1.1.2
   flutter_jailbreak_detection: ^1.4.0
+  video_player: ^1.0.1
 
 dev_dependencies:
   flutter_test:
